@@ -8,7 +8,7 @@
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
-@sink(type="feed", url="<STRING>", atom.func="<STRING>", username="<STRING>", password="<INT>", http.response.code="<INT>", @map(...)))
+@sink(type="feed", url="<STRING>", atom.func="<STRING>", username="<STRING>", password="<INT>", http.response.code="<INT>", timeout="<INT>", @map(...)))
 ```
 
 <span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
@@ -57,6 +57,14 @@
         <td style="vertical-align: top">http.response.code</td>
         <td style="vertical-align: top; word-wrap: break-word">Http response code</td>
         <td style="vertical-align: top">201</td>
+        <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">timeout</td>
+        <td style="vertical-align: top; word-wrap: break-word">time out of the atom http response, in milliseconds</td>
+        <td style="vertical-align: top">1000</td>
         <td style="vertical-align: top">INT</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>

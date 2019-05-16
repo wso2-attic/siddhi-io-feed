@@ -79,6 +79,11 @@ import java.util.Map;
                         description = "Http response code",
                         optional = true,
                         defaultValue = Constants.HTTP_CREATED,
+                        type = DataType.INT),
+                @Parameter(name = Constants.TIME_OUT,
+                        description = "time out of the atom http response, in milliseconds",
+                        optional = true,
+                        defaultValue = Constants.DEFAULT_TIME_OUT,
                         type = DataType.INT)
         },
         examples = {
@@ -103,6 +108,7 @@ public class FeedSink extends Sink {
     private int httpResponse;
     private String atomFunc;
     private StreamDefinition streamDefinition;
+    private OptionHolder optionHolder;
 
     @Override
     public Class[] getSupportedInputEventClasses() {
@@ -121,8 +127,9 @@ public class FeedSink extends Sink {
             this.url = new URL(optionHolder.validateAndGetStaticValue(Constants.URL));
         } catch (MalformedURLException e) {
             throw new SiddhiAppValidationException("Url Syntax Error in " + streamDefinition.getId() + ". Given value "
-                   + optionHolder.validateAndGetStaticValue(Constants.URL));
+                    + optionHolder.validateAndGetStaticValue(Constants.URL));
         }
+        this.optionHolder = optionHolder;
         this.streamDefinition = streamDefinition;
         this.abdera = new Abdera();
         this.abderaClient = new AbderaClient(abdera);
@@ -131,6 +138,8 @@ public class FeedSink extends Sink {
         this.atomFunc = validateAtom(optionHolder.validateAndGetStaticValue(Constants.ATOM_FUNC,
                 Constants.FEED_CREATE));
 
+        int timeout = validateTimeOut();
+        this.abderaClient.setConnectionTimeout(timeout);
         String userName = optionHolder.validateAndGetStaticValue(Constants.USERNAME, Constants.CREDENTIALS);
         String password = optionHolder.validateAndGetStaticValue(Constants.PASSWORD, Constants.CREDENTIALS);
         if (!optionHolder.validateAndGetStaticValue(Constants.USERNAME, Constants.CREDENTIALS)
@@ -158,6 +167,26 @@ public class FeedSink extends Sink {
                 + ". Acceptance parameters are 'create', 'delete', 'update'");
     }
 
+    private int validateTimeOut() {
+        try {
+            int timeout = Integer.parseInt(optionHolder.validateAndGetStaticValue(Constants.TIME_OUT,
+                    Constants.DEFAULT_TIME_OUT));
+            if (timeout > 0) {
+                return timeout;
+            } else {
+                throw new SiddhiAppValidationException("Error in " + streamDefinition.getId()
+                        + " validating timeout, Response timeout accept only positive integers. But found " +
+                        optionHolder.validateAndGetStaticValue(Constants.TIME_OUT,
+                                Constants.DEFAULT_TIME_OUT));
+            }
+        } catch (NumberFormatException e) {
+            throw new SiddhiAppValidationException("Error in " + streamDefinition.getId()
+                    + " validating timeout, Response timeout accept only positive integers. But found " +
+                    optionHolder.validateAndGetStaticValue(Constants.TIME_OUT,
+                            Constants.DEFAULT_TIME_OUT));
+        }
+    }
+
     @Override
     public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
         HashMap<String, String> map = (HashMap) payload;
@@ -166,19 +195,37 @@ public class FeedSink extends Sink {
             case Constants.FEED_CREATE: {
                 Entry entry = EntryUtils.createEntry(map, abdera.newEntry());
                 entry.setPublished(new Date());
-                resp = abderaClient.post(url.toString(), entry);
+                try {
+                    resp = abderaClient.post(url.toString(), entry);
+                } catch (RuntimeException exception) {
+                    throw new FeedErrorResponseException("Connection timeout exception in " + streamDefinition.getId()
+                            + ". The host did not accept the connection within timeout of "
+                            + abderaClient.getConnectionTimeout());
+                }
                 break;
             }
             case Constants.FEED_DELETE: {
-                resp = abderaClient.delete(map.get("id"));
+                try {
+                    resp = abderaClient.delete(map.get("id"));
+                } catch (RuntimeException exception) {
+                    throw new FeedErrorResponseException("Connection timeout exception in " + streamDefinition.getId()
+                            + ". The host did not accept the connection within timeout of "
+                            + abderaClient.getConnectionTimeout());
+                }
                 break;
             }
             case Constants.FEED_UPDATE: {
-                resp = abderaClient.get(url.toString());
-                Document<Entry> doc = resp.getDocument();
-                Entry entry = doc.getRoot();
-                entry = EntryUtils.createEntry(map, entry);
-                resp = abderaClient.put(url.toString(), entry);
+                try {
+                    resp = abderaClient.get(url.toString());
+                    Document<Entry> doc = resp.getDocument();
+                    Entry entry = doc.getRoot();
+                    entry = EntryUtils.createEntry(map, entry);
+                    resp = abderaClient.put(url.toString(), entry);
+                }  catch (RuntimeException exception) {
+                    throw new FeedErrorResponseException("Connection timeout exception in " + streamDefinition.getId()
+                            + ". The host did not accept the connection within timeout of "
+                            + abderaClient.getConnectionTimeout());
+                }
                 break;
             }
         }

@@ -62,6 +62,9 @@ public class Constants {
     public static final QName FEED_GUID = new QName(GUID);
     public static final QName FEED_PUBDATE = new QName(PUBDATE);
     public static final QName FEED_LINK = new QName(LINK);
+    public static final String DEFAULT_TIME_OUT = "1000";
+    public static final String TIME_OUT = "timeout";
+
 
     private Constants() {}
 }
