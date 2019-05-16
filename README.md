@@ -71,7 +71,7 @@ Find some useful links below:
 
 **<a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-feed/api/latest/#sink">feed</a><a target="_blank" href="https://siddhi-io.github.io/siddhi/documentation/siddhi-4.0/">(Sink)</a>**
 
-The feed sink publishes the atom entries messages using Http.
+The feed sink publishes the atom entries using HTTP.
 
 
 **<a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-feed/api/latest/#source">feed</a><a target="_blank" href="https://siddhi-io.github.io/siddhi/documentation/siddhi-4.0/">(Source)</a>**
