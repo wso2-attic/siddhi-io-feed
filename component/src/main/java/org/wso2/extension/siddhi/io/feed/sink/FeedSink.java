@@ -131,25 +131,18 @@ public class FeedSink extends Sink {
     private String atomFunc;
     private StreamDefinition streamDefinition;
     private OptionHolder optionHolder;
-
-    @Override
-    public Class[] getSupportedInputEventClasses() {
-            return new Class[]{Map.class};
-    }
-
-    @Override
-    public String[] getSupportedDynamicOptions() {
-            return new String[0];
-    }
+    private String siddhiAppName;
 
     @Override
     protected void init(StreamDefinition streamDefinition, OptionHolder optionHolder, ConfigReader configReader,
-            SiddhiAppContext siddhiAppContext) {
+                        SiddhiAppContext siddhiAppContext) {
+        this.siddhiAppName = siddhiAppContext.getName();
         try {
             this.url = new URL(optionHolder.validateAndGetStaticValue(Constants.URL));
         } catch (MalformedURLException e) {
-            throw new SiddhiAppValidationException("Url Syntax Error in " + streamDefinition.getId() + ". Given value "
-                    + optionHolder.validateAndGetStaticValue(Constants.URL));
+            throw new SiddhiAppValidationException("Url Syntax Error in siddhi app: " + siddhiAppName + ". stream name "
+                    + streamDefinition.getId() + ". Given value "
+                    + optionHolder.validateAndGetStaticValue(Constants.URL), e);
         }
         this.optionHolder = optionHolder;
         this.streamDefinition = streamDefinition;
@@ -167,7 +160,7 @@ public class FeedSink extends Sink {
         if (!optionHolder.validateAndGetStaticValue(Constants.USERNAME, Constants.CREDENTIALS)
                 .equals(Constants.CREDENTIALS)
                 || !optionHolder.validateAndGetStaticValue(Constants.PASSWORD, Constants.CREDENTIALS)
-                        .equals(Constants.CREDENTIALS)) {
+                .equals(Constants.CREDENTIALS)) {
             AbderaClient.registerTrustManager();
             try {
                 abderaClient.addCredentials(String.valueOf(url), Constants.REALM, Constants.AUTH_SCHEME,
@@ -178,6 +171,16 @@ public class FeedSink extends Sink {
         }
     }
 
+    @Override
+    public Class[] getSupportedInputEventClasses() {
+            return new Class[]{Map.class};
+    }
+
+    @Override
+    public String[] getSupportedDynamicOptions() {
+            return new String[0];
+    }
+
     // atom function validation
     private String validateAtom(String atomFunc) {
         atomFunc = atomFunc.toLowerCase(Locale.ENGLISH);
@@ -185,7 +188,8 @@ public class FeedSink extends Sink {
                 || atomFunc.equals(Constants.FEED_DELETE) || atomFunc.equals(Constants.FEED_CREATE)) {
             return atomFunc;
         }
-        throw new SiddhiAppValidationException("Atom function validation error  in " + streamDefinition.getId()
+        throw new SiddhiAppValidationException("Atom function validation error  in siddhi app: " + siddhiAppName
+                + " in stream " + streamDefinition.getId()
                 + ". Acceptance parameters are 'create', 'delete', 'update'");
     }
 
@@ -196,13 +200,15 @@ public class FeedSink extends Sink {
             if (timeout > 0) {
                 return timeout;
             } else {
-                throw new SiddhiAppValidationException("Error in " + streamDefinition.getId()
+                throw new SiddhiAppValidationException("Error in siddhi app: " + siddhiAppName + " in stream "
+                        + streamDefinition.getId()
                         + " validating timeout, Response timeout accept only positive integers. But found " +
                         optionHolder.validateAndGetStaticValue(Constants.TIME_OUT,
                                 Constants.DEFAULT_TIME_OUT));
             }
         } catch (NumberFormatException e) {
-            throw new SiddhiAppValidationException("Error in " + streamDefinition.getId()
+            throw new SiddhiAppValidationException("Error in siddhi app: " + siddhiAppName + " in stream "
+                    + streamDefinition.getId()
                     + " validating timeout, Response timeout accept only positive integers. But found " +
                     optionHolder.validateAndGetStaticValue(Constants.TIME_OUT,
                             Constants.DEFAULT_TIME_OUT));
@@ -220,7 +226,8 @@ public class FeedSink extends Sink {
                 try {
                     resp = abderaClient.post(url.toString(), entry);
                 } catch (RuntimeException exception) {
-                    throw new FeedErrorResponseException("Connection timeout exception in " + streamDefinition.getId()
+                    throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
+                            + " in stram " + streamDefinition.getId()
                             + ". The host did not accept the connection within timeout of "
                             + abderaClient.getConnectionTimeout());
                 }
@@ -230,7 +237,8 @@ public class FeedSink extends Sink {
                 try {
                     resp = abderaClient.delete(map.get("id"));
                 } catch (RuntimeException exception) {
-                    throw new FeedErrorResponseException("Connection timeout exception in " + streamDefinition.getId()
+                    throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
+                            + " in stram " + streamDefinition.getId()
                             + ". The host did not accept the connection within timeout of "
                             + abderaClient.getConnectionTimeout());
                 }
@@ -244,17 +252,20 @@ public class FeedSink extends Sink {
                     entry = EntryUtils.createEntry(map, entry);
                     resp = abderaClient.put(url.toString(), entry);
                 }  catch (RuntimeException exception) {
-                    throw new FeedErrorResponseException("Connection timeout exception in " + streamDefinition.getId()
+                    throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
+                            + " in stram " + streamDefinition.getId()
                             + ". The host did not accept the connection within timeout of "
                             + abderaClient.getConnectionTimeout());
                 }
                 break;
             }
+            // default and other cases are not possible due to validation
         }
 
         if (resp != null) {
             if (resp.getStatus() != httpResponse) {
-                throw new FeedErrorResponseException("Response status conflicts in " + streamDefinition.getId()
+                throw new FeedErrorResponseException("Response status conflicts in siddhi app: " + siddhiAppName
+                        + " in stream " + streamDefinition.getId()
                         + " response status code is : " + resp.getStatus() + "-" + resp.getStatusText());
             }
             resp.release();
@@ -265,12 +276,10 @@ public class FeedSink extends Sink {
 
     @Override
     public void connect() throws ConnectionUnavailableException {
-
     }
 
     @Override
     public void disconnect() {
-
     }
 
     @Override
@@ -285,6 +294,5 @@ public class FeedSink extends Sink {
 
     @Override
     public void restoreState(Map<String, Object> map) {
-
     }
 }

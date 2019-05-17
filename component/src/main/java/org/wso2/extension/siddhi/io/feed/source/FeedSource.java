@@ -71,6 +71,18 @@ import java.util.concurrent.TimeUnit;
                                 "@source(type='feed',\n" +
                                 "url = 'http://localhost:8080/news/rss.xml',\n" +
                                 "@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),\n" +
+                                "feed.type = 'rss')\n" +
+                                " define stream inputStream(title string, link string, updated string)",
+                        description = " This Query Shows how to request to the http server and consume Rss feed" +
+                                " entries. Without optional values it requires url, . Those stream variables are " +
+                                "(title, link, updated) the standard element" +
+                                " of a RSS item "
+                ),
+                @Example(
+                        syntax = "@App:name('test')\n" +
+                                "@source(type='feed',\n" +
+                                "url = 'http://localhost:8080/news/rss.xml',\n" +
+                                "@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),\n" +
                                 "request.interval = '15',\n" +
                                 "feed.type = 'rss')\n" +
                                 " define stream inputStream(title string, link string, updated string)",
@@ -102,12 +114,14 @@ public class FeedSource extends Source {
     private ScheduledFuture future;
     private SourceEventListener sourceEventListener;
     private ScheduledExecutorService scheduledExecutorService;
+    private String siddhiAppName;
 
     @Override
     public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
                      String[] requestedTransportPropertyNames, ConfigReader configReader,
                      SiddhiAppContext siddhiAppContext) {
 
+        this.siddhiAppName = siddhiAppContext.getName();
         this.optionHolder = optionHolder;
         this.sourceEventListener = sourceEventListener;
         try {
@@ -122,16 +136,15 @@ public class FeedSource extends Source {
         this.scheduledExecutorService = siddhiAppContext.getScheduledExecutorService();
     }
 
-    //
     private String validateType() {
         String type = optionHolder.validateAndGetStaticValue(Constants.FEED_TYPE);
         type = type.toLowerCase(Locale.ENGLISH);
         if (type.equals(Constants.RSS) || type.equals(Constants.ATOM)) {
             return type;
         } else {
-            throw new SiddhiAppValidationException("Feed Type Validation error in "
-                    + sourceEventListener.getStreamDefinition().getId() + " Acceptance parameters are RSS & Atom. But" +
-                    " found " + optionHolder.validateAndGetStaticValue(Constants.FEED_TYPE));
+            throw new SiddhiAppValidationException("Feed Type Validation error in siddhi app " + siddhiAppName
+                    + " in stream" + sourceEventListener.getStreamDefinition().getId() + " Acceptance parameters are " +
+                    "RSS & Atom. But found " + optionHolder.validateAndGetStaticValue(Constants.FEED_TYPE));
         }
     }
 
@@ -142,13 +155,15 @@ public class FeedSource extends Source {
             if (requestInterval > 0) {
                 return requestInterval;
             } else {
-                throw new SiddhiAppValidationException("Error in " + sourceEventListener.getStreamDefinition().getId()
+                throw new SiddhiAppValidationException("Error in siddhi app " + siddhiAppName + " in stream "
+                        + sourceEventListener.getStreamDefinition().getId()
                         + " validating request interval, Request interval accept only positive integers. But found " +
                         optionHolder.validateAndGetStaticValue(Constants.REQUEST_INTERVAL,
                                 Constants.DEFAULT_REQUEST_INTERVAL));
             }
         } catch (NumberFormatException e) {
-            throw new SiddhiAppValidationException("Error in " + sourceEventListener.getStreamDefinition().getId()
+            throw new SiddhiAppValidationException("Error in siddhi app " + siddhiAppName + " in stream "
+                    + sourceEventListener.getStreamDefinition().getId()
                     + " validating request interval, Request interval accept only positive integers. But found " +
                     optionHolder.validateAndGetStaticValue(Constants.REQUEST_INTERVAL,
                             Constants.DEFAULT_REQUEST_INTERVAL));
@@ -168,7 +183,6 @@ public class FeedSource extends Source {
 
     @Override
     public void disconnect() {
-
     }
 
     @Override
@@ -202,6 +216,5 @@ public class FeedSource extends Source {
 
     @Override
     public void restoreState(Map<String, Object> map) {
-
     }
 }

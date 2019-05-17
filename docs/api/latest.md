@@ -82,6 +82,28 @@ http.response.code = '202',
 ```
 <p style="word-wrap: break-word"> This example shows how to create Atom entry on existing atom document. The variables of stream are the standard element of a atom entry </p>
 
+<span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span>
+```
+@App:name('test')n@sink(type='feed',
+url = 'localhost:8080/news',
+http.response.code = '204',
+atom.func = 'delete',
+@map(type = 'keyvalue'))
+ define stream outputStream(id string);
+```
+<p style="word-wrap: break-word"> This example shows how to delete Atom entry on existing atom document. The 'id' variable is a standard element of a atom entry </p>
+
+<span id="example-3" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 3</span>
+```
+@App:name('test')n@sink(type='feed',
+url = 'localhost:8080/news',
+http.response.code = '200',
+atom.func = 'update',
+@map(type = 'keyvalue'))
+ define stream outputStream(id string, content string, title string);
+```
+<p style="word-wrap: break-word"> This example shows how to update Atom entry on existing atom document. The variables of stream are the standard element of a atom entry </p>
+
 ## Source
 
 ### feed *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>*
@@ -134,11 +156,34 @@ http.response.code = '202',
 ```
 @App:name('test')
 @source(type='feed',
-url = 'http://feeds.bbci.co.uk/news/rss.xml',
+url = 'http://localhost:8080/news/rss.xml',
+@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),
+feed.type = 'rss')
+ define stream inputStream(title string, link string, updated string)
+```
+<p style="word-wrap: break-word"> This Query Shows how to request to the http server and consume Rss feed entries. Without optional values it requires url, . Those stream variables are (title, link, updated) the standard element of a RSS item </p>
+
+<span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span>
+```
+@App:name('test')
+@source(type='feed',
+url = 'http://localhost:8080/news/rss.xml',
 @map(type = 'keyvalue', fail.on.missing.attribute = 'false'),
 request.interval = '15',
 feed.type = 'rss')
+ define stream inputStream(title string, link string, updated string)
+```
+<p style="word-wrap: break-word"> This Query Shows how to request to the http server and consume Rss feed entries. Those stream variables are (title, link, updated) the standard element of a RSS item </p>
+
+<span id="example-3" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 3</span>
+```
+@App:name('test')
+@source(type='feed',
+url = 'http://localhost:8080/news/rss.xml',
+@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),
+request.interval = '15',
+feed.type = 'atom')
  define stream inputStream(title string, id string, updated string)
 ```
-<p style="word-wrap: break-word"> This Query Shows how to request to the http server and consume Rss feed entries. Those stream variables are (title, id, updated) feed entry data</p>
+<p style="word-wrap: break-word"> This Query Shows how to request to the http server and consume Atom feed entries. Those stream variables are (title, id, updated) the standard element of a atom entry</p>
 

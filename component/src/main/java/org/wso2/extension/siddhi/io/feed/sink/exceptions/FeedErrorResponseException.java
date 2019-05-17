@@ -18,10 +18,12 @@
 
 package org.wso2.extension.siddhi.io.feed.sink.exceptions;
 
+import org.wso2.siddhi.core.exception.SiddhiAppRuntimeException;
+
 /**
  * Feed Error Response Runtime Exception
  */
-public class FeedErrorResponseException extends RuntimeException {
+public class FeedErrorResponseException extends SiddhiAppRuntimeException {
 
     public FeedErrorResponseException(String message) {
         super(message);
