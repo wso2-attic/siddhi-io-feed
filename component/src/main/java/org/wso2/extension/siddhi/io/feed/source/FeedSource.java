@@ -69,13 +69,26 @@ import java.util.concurrent.TimeUnit;
                 @Example(
                         syntax = "@App:name('test')\n" +
                                 "@source(type='feed',\n" +
-                                "url = 'http://feeds.bbci.co.uk/news/rss.xml',\n" +
+                                "url = 'http://localhost:8080/news/rss.xml',\n" +
                                 "@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),\n" +
                                 "request.interval = '15',\n" +
                                 "feed.type = 'rss')\n" +
+                                " define stream inputStream(title string, link string, updated string)",
+                        description = " This Query Shows how to request to the http server and consume Rss feed" +
+                                " entries. Those stream variables are (title, link, updated) the standard element" +
+                                " of a RSS item "
+                ),
+                @Example(
+                        syntax = "@App:name('test')\n" +
+                                "@source(type='feed',\n" +
+                                "url = 'http://localhost:8080/news/rss.xml',\n" +
+                                "@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),\n" +
+                                "request.interval = '15',\n" +
+                                "feed.type = 'atom')\n" +
                                 " define stream inputStream(title string, id string, updated string)",
-                        description = " This Query Shows how to request to the http server and consume Rss " +
-                                "feed entries. Those stream variables are (title, id, updated) feed entry data"
+                        description = " This Query Shows how to request to the http server and consume Atom " +
+                                "feed entries. Those stream variables are (title, id, updated) the standard element" +
+                                " of a atom entry"
                 )
         }
 )

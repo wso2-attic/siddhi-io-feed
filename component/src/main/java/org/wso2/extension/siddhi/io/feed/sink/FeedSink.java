@@ -96,6 +96,28 @@ import java.util.Map;
                                 " define stream outputStream(content string, title string);",
                         description = " This example shows how to create Atom entry on existing atom document. The " +
                                 "variables of stream are the standard element of a atom entry "
+                ),
+                @Example(
+                        syntax = "@App:name('test')n" +
+                                "@sink(type='feed',\n" +
+                                "url = 'localhost:8080/news',\n" +
+                                "http.response.code = '204',\n" +
+                                "atom.func = 'delete',\n" +
+                                "@map(type = 'keyvalue'))\n" +
+                                " define stream outputStream(id string);",
+                        description = " This example shows how to delete Atom entry on existing atom document. The " +
+                                "'id' variable is a standard element of a atom entry "
+                ),
+                @Example(
+                        syntax = "@App:name('test')n" +
+                                "@sink(type='feed',\n" +
+                                "url = 'localhost:8080/news',\n" +
+                                "http.response.code = '200',\n" +
+                                "atom.func = 'update',\n" +
+                                "@map(type = 'keyvalue'))\n" +
+                                " define stream outputStream(id string, content string, title string);",
+                        description = " This example shows how to update Atom entry on existing atom document. The " +
+                                "variables of stream are the standard element of a atom entry "
                 )
         }
 )
