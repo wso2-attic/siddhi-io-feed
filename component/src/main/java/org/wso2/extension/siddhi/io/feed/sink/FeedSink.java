@@ -209,11 +209,11 @@ public class FeedSink extends Sink {
 
     @Override
     public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
-        HashMap<String, String> map = (HashMap) payload;
+        HashMap<String, String> entryMap = (HashMap) payload;
         ClientResponse clientResponse = null;
         switch (atomFunc) {
             case Constants.FEED_CREATE: {
-                Entry entry = EntryUtils.createEntry(map, abdera.newEntry());
+                Entry entry = EntryUtils.createEntry(entryMap, abdera.newEntry());
                 entry.setPublished(new Date());
                 try {
                     clientResponse = abderaClient.post(url.toString(), entry);
@@ -227,7 +227,7 @@ public class FeedSink extends Sink {
             }
             case Constants.FEED_DELETE: {
                 try {
-                    clientResponse = abderaClient.delete(map.get("id"));
+                    clientResponse = abderaClient.delete(entryMap.get("id"));
                 } catch (RuntimeException exception) {
                     throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
                             + " in stram " + streamDefinition.getId()
@@ -241,7 +241,7 @@ public class FeedSink extends Sink {
                     clientResponse = abderaClient.get(url.toString());
                     Document<Entry> doc = clientResponse.getDocument();
                     Entry entry = doc.getRoot();
-                    entry = EntryUtils.createEntry(map, entry);
+                    entry = EntryUtils.createEntry(entryMap, entry);
                     clientResponse = abderaClient.put(url.toString(), entry);
                 }  catch (RuntimeException exception) {
                     throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
@@ -257,8 +257,8 @@ public class FeedSink extends Sink {
         if (clientResponse != null) {
             if (clientResponse.getStatus() != httpResponse) {
                 throw new FeedErrorResponseException("Response status conflicts in siddhi app: " + siddhiAppName
-                        + " in stream " + streamDefinition.getId()
-                        + " response status code is : " + clientResponse.getStatus() + "-" + clientResponse.getStatusText());
+                        + " in stream " + streamDefinition.getId() + " response status code is : "
+                        + clientResponse.getStatus() + "-" + clientResponse.getStatusText());
             }
             clientResponse.release();
         } else {
