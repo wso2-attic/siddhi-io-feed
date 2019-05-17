@@ -1,8 +1,6 @@
 ﻿siddhi-io-feed
 ======================================
 
-
-
 The **siddhi-io-feed extension** is an extension to <a target="_blank" href="https://wso2.github.io/siddhi">Siddhi</a> that allows you to receive and publish atom entry events via http and 
 also allow you to receive RSS item events via Http. This extension works with WSO2 Stream Processor and with standalone Siddhi.
 
@@ -34,13 +32,6 @@ Find some useful links below:
      </dependency>
 ```
 
-
-
-
-
-
-
-
  * Post your questions with the <a target="_blank" href="http://stackoverflow.com/search?q=siddhi">"Siddhi"</a> tag in <a target="_blank" href="http://stackoverflow.com/search?q=siddhi">Stackoverflow</a>.
 
  * Siddhi developers can be contacted via the mailing lists:
@@ -48,7 +39,6 @@ Find some useful links below:
     Developers List   : [dev@wso2.org](mailto:dev@wso2.org)
 
     Architecture List : [architecture@wso2.org](mailto:architecture@wso2.org)
-
 
 * We are committed to ensuring support for this extension in production. Our unique approach ensures that all support leverages our open development methodology and is provided by the very same engineers who build the technology.
 
@@ -64,7 +54,6 @@ Find some useful links below:
 | master  | [![Build Status](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-prometheus/badge/icon)](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-prometheus/) |
 
 ---
-
 
 
 ## Features
