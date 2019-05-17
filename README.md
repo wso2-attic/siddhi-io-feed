@@ -51,7 +51,7 @@ Find some useful links below:
 
 |  Branch | Build Status |
 | :------ |:------------ |
-| master  | [![Build Status](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-prometheus/badge/icon)](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-prometheus/) |
+| master  | [![Build Status](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-feed/badge/icon)](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-feed/) |
 
 ---
 

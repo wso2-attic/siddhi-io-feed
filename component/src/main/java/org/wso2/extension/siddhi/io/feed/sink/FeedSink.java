@@ -210,13 +210,13 @@ public class FeedSink extends Sink {
     @Override
     public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
         HashMap<String, String> map = (HashMap) payload;
-        ClientResponse resp = null;
+        ClientResponse clientResponse = null;
         switch (atomFunc) {
             case Constants.FEED_CREATE: {
                 Entry entry = EntryUtils.createEntry(map, abdera.newEntry());
                 entry.setPublished(new Date());
                 try {
-                    resp = abderaClient.post(url.toString(), entry);
+                    clientResponse = abderaClient.post(url.toString(), entry);
                 } catch (RuntimeException exception) {
                     throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
                             + " in stram " + streamDefinition.getId()
@@ -227,7 +227,7 @@ public class FeedSink extends Sink {
             }
             case Constants.FEED_DELETE: {
                 try {
-                    resp = abderaClient.delete(map.get("id"));
+                    clientResponse = abderaClient.delete(map.get("id"));
                 } catch (RuntimeException exception) {
                     throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
                             + " in stram " + streamDefinition.getId()
@@ -238,11 +238,11 @@ public class FeedSink extends Sink {
             }
             case Constants.FEED_UPDATE: {
                 try {
-                    resp = abderaClient.get(url.toString());
-                    Document<Entry> doc = resp.getDocument();
+                    clientResponse = abderaClient.get(url.toString());
+                    Document<Entry> doc = clientResponse.getDocument();
                     Entry entry = doc.getRoot();
                     entry = EntryUtils.createEntry(map, entry);
-                    resp = abderaClient.put(url.toString(), entry);
+                    clientResponse = abderaClient.put(url.toString(), entry);
                 }  catch (RuntimeException exception) {
                     throw new FeedErrorResponseException("Connection timeout exception in siddhi app: " + siddhiAppName
                             + " in stram " + streamDefinition.getId()
@@ -254,13 +254,13 @@ public class FeedSink extends Sink {
             /** default and other cases are not possible due to validation */
         }
 
-        if (resp != null) {
-            if (resp.getStatus() != httpResponse) {
+        if (clientResponse != null) {
+            if (clientResponse.getStatus() != httpResponse) {
                 throw new FeedErrorResponseException("Response status conflicts in siddhi app: " + siddhiAppName
                         + " in stream " + streamDefinition.getId()
-                        + " response status code is : " + resp.getStatus() + "-" + resp.getStatusText());
+                        + " response status code is : " + clientResponse.getStatus() + "-" + clientResponse.getStatusText());
             }
-            resp.release();
+            clientResponse.release();
         } else {
             throw new FeedErrorResponseException("Response is null in siddhi app " + siddhiAppName + " in " +
                     "stream " + streamDefinition.getId() + " from url " + url.toString());

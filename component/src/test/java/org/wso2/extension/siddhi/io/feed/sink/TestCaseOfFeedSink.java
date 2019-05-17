@@ -60,7 +60,6 @@ public class TestCaseOfFeedSink {
 
     @Test
     public void basicSink() throws InterruptedException {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                           FEED Create for Sink Test                                 ");
         log.info("-------------------------------------------------------------------------------------");
@@ -101,7 +100,6 @@ public class TestCaseOfFeedSink {
 
     @Test(dependsOnMethods = "basicSink")
     public void sinkForUpdate() throws InterruptedException {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                             FEED Sink for UPDATE Test                               ");
         log.info("-------------------------------------------------------------------------------------");
@@ -144,7 +142,6 @@ public class TestCaseOfFeedSink {
 
     @Test(dependsOnMethods = "sinkForUpdate")
     public void sinkForDelete() throws InterruptedException {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                           FEED Sink for DELETE Test                                 ");
         log.info("-------------------------------------------------------------------------------------");
@@ -191,7 +188,6 @@ public class TestCaseOfFeedSink {
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
     public void sinkForValidation() {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                           FEED sink for Url Malformed Exception Test                ");
         log.info("-------------------------------------------------------------------------------------");
@@ -216,7 +212,6 @@ public class TestCaseOfFeedSink {
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
     public void sinkValidationTest() {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                  FEED Sink for atom function validation Test                        ");
         log.info("-------------------------------------------------------------------------------------");

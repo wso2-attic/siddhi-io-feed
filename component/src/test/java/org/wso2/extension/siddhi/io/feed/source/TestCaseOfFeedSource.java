@@ -45,7 +45,6 @@ public class TestCaseOfFeedSource {
 
     @Test
     public void sourceForAtom() throws InterruptedException {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                           Feed Source For Atom Test                                 ");
         log.info("-------------------------------------------------------------------------------------");
@@ -53,7 +52,6 @@ public class TestCaseOfFeedSource {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@source(type='feed', \n" +
                 "url = 'https://wso2.org/jenkins/job/siddhi/job/siddhi-io-tcp/rssAll', \n" +
                 "@map(type = 'keyvalue', fail.on.missing.attribute = 'false'), \n" +
@@ -81,7 +79,6 @@ public class TestCaseOfFeedSource {
 
     @Test
     public void sourceForPauseAndResume() throws InterruptedException {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                  Feed Source For Pause and Resume Test                               ");
         log.info("-------------------------------------------------------------------------------------");
@@ -89,7 +86,6 @@ public class TestCaseOfFeedSource {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@source(type='feed', \n" +
                 "url = 'https://wso2.org/jenkins/job/siddhi/job/siddhi-io-tcp/rssAll', \n" +
                 "@map(type = 'keyvalue', fail.on.missing.attribute = 'false'), \n" +
@@ -121,14 +117,13 @@ public class TestCaseOfFeedSource {
 
     @Test
     public void sourceForRss() throws InterruptedException {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                           Feed Source For RSS Test                                  ");
         log.info("-------------------------------------------------------------------------------------");
+
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@source(type='feed', \n" +
                 "url = 'http://feeds.bbci.co.uk/news/rss.xml', \n" +
                 "@map(type = 'keyvalue', fail.on.missing.attribute = 'false'), \n" +
@@ -154,7 +149,6 @@ public class TestCaseOfFeedSource {
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
     public void sinkForValidation() {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                Feed Source For Feed Type Validation Test                            ");
         log.info("-------------------------------------------------------------------------------------");
@@ -162,7 +156,6 @@ public class TestCaseOfFeedSource {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@Source(type='feed', \n" +
                 "feed.type = 'Atomm', \n" +
                 "url = 'http://feeds.bbci.co.uk/news/rss.xml', \n" +
@@ -181,7 +174,6 @@ public class TestCaseOfFeedSource {
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
     public void sinkForValidation2() {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                  Feed Source For Request Interval Validation Test                   ");
         log.info("-------------------------------------------------------------------------------------");
@@ -207,7 +199,6 @@ public class TestCaseOfFeedSource {
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
     public void sinkForValidation3() {
-
         log.info("-------------------------------------------------------------------------------------");
         log.info("                  Feed Source For Request Interval Validation Test                   ");
         log.info("-------------------------------------------------------------------------------------");
