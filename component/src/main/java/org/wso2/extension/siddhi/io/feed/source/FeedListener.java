@@ -62,7 +62,7 @@ public class FeedListener implements Runnable {
         InputStream inputStream = null;
         try {
             inputStream = url.openStream();
-            if (type.equals(Constants.ATOM)) { // Atom Consuming
+            if (type.equals(Constants.ATOM)) { /** Atom Consuming */
                 Document<Feed> doc = abdera.getParser().parse(inputStream, url.toString());
                 Feed feed = doc.getRoot();
                 for (Entry entry : feed.getEntries()) {
@@ -70,7 +70,7 @@ public class FeedListener implements Runnable {
                     waitIfPause();
                     sourceEventListener.onEvent(map, null);
                 }
-            } else if (type.equals(Constants.RSS)) { // RSS Consuming
+            } else if (type.equals(Constants.RSS)) { /** RSS Consuming */
                 Document<Feed> doc = abdera.getParser().parse(url.openStream(), url.toString());
                 OMElement item = (OMElement) doc.getRoot();
                 Iterator itemValue = item.getFirstElement().getChildrenWithName(Constants.FEED_ITEM);

@@ -68,12 +68,12 @@ import java.util.Map;
                 @Parameter(name = Constants.USERNAME,
                         description = "User name of the basic authentication",
                         optional = true,
-                        defaultValue = Constants.CREDENTIALS,
+                        defaultValue = Constants.DEFAULT_USERNAME,
                         type = DataType.STRING),
                 @Parameter(name = Constants.PASSWORD,
                         description = "Password of the basic authentication",
                         optional = true,
-                        defaultValue = Constants.CREDENTIALS,
+                        defaultValue = Constants.DEFAULT_PASSWORD,
                         type = DataType.INT),
                 @Parameter(name = Constants.HTTP_RESPONSE_CODE,
                         description = "Http response code",
@@ -130,7 +130,6 @@ public class FeedSink extends Sink {
     private int httpResponse;
     private String atomFunc;
     private StreamDefinition streamDefinition;
-    private OptionHolder optionHolder;
     private String siddhiAppName;
 
     @Override
@@ -144,7 +143,6 @@ public class FeedSink extends Sink {
                     + streamDefinition.getId() + ". Given value "
                     + optionHolder.validateAndGetStaticValue(Constants.URL), e);
         }
-        this.optionHolder = optionHolder;
         this.streamDefinition = streamDefinition;
         this.abdera = new Abdera();
         this.abderaClient = new AbderaClient(abdera);
@@ -152,53 +150,11 @@ public class FeedSink extends Sink {
                 Constants.HTTP_CREATED));
         this.atomFunc = validateAtom(optionHolder.validateAndGetStaticValue(Constants.ATOM_FUNC,
                 Constants.FEED_CREATE));
-
-        int timeout = validateTimeOut();
-        this.abderaClient.setConnectionTimeout(timeout);
-        String userName = optionHolder.validateAndGetStaticValue(Constants.USERNAME, Constants.CREDENTIALS);
-        String password = optionHolder.validateAndGetStaticValue(Constants.PASSWORD, Constants.CREDENTIALS);
-        if (!optionHolder.validateAndGetStaticValue(Constants.USERNAME, Constants.CREDENTIALS)
-                .equals(Constants.CREDENTIALS)
-                || !optionHolder.validateAndGetStaticValue(Constants.PASSWORD, Constants.CREDENTIALS)
-                .equals(Constants.CREDENTIALS)) {
-            AbderaClient.registerTrustManager();
-            try {
-                abderaClient.addCredentials(String.valueOf(url), Constants.REALM, Constants.AUTH_SCHEME,
-                        new UsernamePasswordCredentials(userName, password));
-            } catch (URISyntaxException e) {
-                // nothing, url syntax exception doesn't throw because url string getting form a URL object
-            }
-        }
-    }
-
-    @Override
-    public Class[] getSupportedInputEventClasses() {
-            return new Class[]{Map.class};
-    }
-
-    @Override
-    public String[] getSupportedDynamicOptions() {
-            return new String[0];
-    }
-
-    // atom function validation
-    private String validateAtom(String atomFunc) {
-        atomFunc = atomFunc.toLowerCase(Locale.ENGLISH);
-        if (atomFunc.equals(Constants.FEED_UPDATE)
-                || atomFunc.equals(Constants.FEED_DELETE) || atomFunc.equals(Constants.FEED_CREATE)) {
-            return atomFunc;
-        }
-        throw new SiddhiAppValidationException("Atom function validation error  in siddhi app: " + siddhiAppName
-                + " in stream " + streamDefinition.getId()
-                + ". Acceptance parameters are 'create', 'delete', 'update'");
-    }
-
-    private int validateTimeOut() {
         try {
             int timeout = Integer.parseInt(optionHolder.validateAndGetStaticValue(Constants.TIME_OUT,
                     Constants.DEFAULT_TIME_OUT));
             if (timeout > 0) {
-                return timeout;
+                this.abderaClient.setConnectionTimeout(timeout);
             } else {
                 throw new SiddhiAppValidationException("Error in siddhi app: " + siddhiAppName + " in stream "
                         + streamDefinition.getId()
@@ -213,6 +169,42 @@ public class FeedSink extends Sink {
                     optionHolder.validateAndGetStaticValue(Constants.TIME_OUT,
                             Constants.DEFAULT_TIME_OUT));
         }
+        String userName = optionHolder.validateAndGetStaticValue(Constants.USERNAME, Constants.DEFAULT_USERNAME);
+        String password = optionHolder.validateAndGetStaticValue(Constants.PASSWORD, Constants.DEFAULT_PASSWORD);
+        if (!optionHolder.validateAndGetStaticValue(Constants.USERNAME, Constants.DEFAULT_USERNAME)
+                .equals(Constants.DEFAULT_USERNAME)
+                || !optionHolder.validateAndGetStaticValue(Constants.PASSWORD, Constants.DEFAULT_PASSWORD)
+                .equals(Constants.DEFAULT_PASSWORD)) {
+            AbderaClient.registerTrustManager();
+            try {
+                abderaClient.addCredentials(String.valueOf(url), Constants.REALM, Constants.AUTH_SCHEME,
+                        new UsernamePasswordCredentials(userName, password));
+            } catch (URISyntaxException e) {
+                /** URISyntaxException will not be thrown here as the URL is already validated */
+            }
+        }
+    }
+
+    @Override
+    public Class[] getSupportedInputEventClasses() {
+            return new Class[]{Map.class};
+    }
+
+    @Override
+    public String[] getSupportedDynamicOptions() {
+            return new String[0];
+    }
+
+    /** atom function validation */
+    private String validateAtom(String atomFunc) {
+        atomFunc = atomFunc.toLowerCase(Locale.ENGLISH);
+        if (atomFunc.equals(Constants.FEED_UPDATE)
+                || atomFunc.equals(Constants.FEED_DELETE) || atomFunc.equals(Constants.FEED_CREATE)) {
+            return atomFunc;
+        }
+        throw new SiddhiAppValidationException("Atom function validation error  in siddhi app: " + siddhiAppName
+                + " in stream " + streamDefinition.getId()
+                + ". Acceptance parameters are 'create', 'delete', 'update'");
     }
 
     @Override
@@ -259,7 +251,7 @@ public class FeedSink extends Sink {
                 }
                 break;
             }
-            // default and other cases are not possible due to validation
+            /** default and other cases are not possible due to validation */
         }
 
         if (resp != null) {
@@ -270,7 +262,8 @@ public class FeedSink extends Sink {
             }
             resp.release();
         } else {
-            throw new FeedErrorResponseException("Response is null");
+            throw new FeedErrorResponseException("Response is null in siddhi app " + siddhiAppName + " in " +
+                    "stream " + streamDefinition.getId() + " from url " + url.toString());
         }
     }
 

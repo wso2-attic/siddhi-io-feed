@@ -39,7 +39,7 @@ public class NewsAdapter extends AbstractEntityCollectionAdapter<News> {
     private static final String ID_PREFIX = "wso2:news:db:";
 
     private AtomicInteger nextId = new AtomicInteger(1000);
-    private Map<Integer, News> customers = new HashMap<Integer, News>();
+    private Map<Integer, News> newsmap = new HashMap<Integer, News>();
     private Factory factory = new Abdera().getFactory();
 
     public String getId(RequestContext request) {
@@ -58,25 +58,25 @@ public class NewsAdapter extends AbstractEntityCollectionAdapter<News> {
                               List<Person> authors,
                               Content content,
                               RequestContext request) throws ResponseContextException {
-        News customer = contentToNews(content);
-        customers.put(customer.getId(), customer);
-        return customer;
+        News news = contentToNews(content);
+        newsmap.put(news.getId(), news);
+        return news;
     }
 
     private News contentToNews(Content content) {
-        News customer = new News();
-        return contentToNews(content, customer);
+        News news = new News();
+        return contentToNews(content, news);
     }
 
-    private News contentToNews(Content content, News customer) {
-        customer.setName(content.getWrappedValue());
-        customer.setId(nextId.incrementAndGet());
-        return customer;
+    private News contentToNews(Content content, News news) {
+        news.setName(content.getWrappedValue());
+        news.setId(nextId.incrementAndGet());
+        return news;
     }
 
     public void deleteEntry(String resourceName, RequestContext request) throws ResponseContextException {
         String id = resourceName.replace("-Content", "");
-        customers.remove(Integer.parseInt(id));
+        newsmap.remove(Integer.parseInt(id));
     }
 
     public String getAuthor(RequestContext request) {
@@ -96,12 +96,12 @@ public class NewsAdapter extends AbstractEntityCollectionAdapter<News> {
     }
 
     public Iterable<News> getEntries(RequestContext request) {
-        return customers.values();
+        return newsmap.values();
     }
 
     public News getEntry(String resourceName, RequestContext request) throws ResponseContextException {
         Integer id = getIdFromResourceName(resourceName);
-        return customers.get(id);
+        return newsmap.get(id);
     }
 
     private Integer getIdFromResourceName(String resourceName) throws ResponseContextException {
@@ -114,7 +114,7 @@ public class NewsAdapter extends AbstractEntityCollectionAdapter<News> {
     }
 
     public News getEntryFromId(String id, RequestContext request) {
-        return customers.get(new Integer(id));
+        return newsmap.get(new Integer(id));
     }
 
     public String getId(News entry) {
@@ -145,7 +145,7 @@ public class NewsAdapter extends AbstractEntityCollectionAdapter<News> {
                          String summary,
                          Content content,
                          RequestContext request) throws ResponseContextException {
-        News news = customers.get(entry.getId());
+        News news = newsmap.get(entry.getId());
         news.setName(title);
     }
 

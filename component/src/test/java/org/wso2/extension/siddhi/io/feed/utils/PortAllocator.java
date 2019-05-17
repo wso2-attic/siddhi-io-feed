@@ -24,7 +24,6 @@ import java.net.ServerSocket;
 
 public class PortAllocator {
     public static int allocatePort() {
-
         try {
             ServerSocket ss = new ServerSocket(0);
             int port = ss.getLocalPort();

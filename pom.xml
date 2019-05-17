@@ -35,7 +35,6 @@ under the License. <version>1.0.17</version>
     <name>Siddhi I/O feed</name>
     <dependencyManagement>
         <dependencies>
-            <!-- https://mvnrepository.com/artifact/org.apache.abdera/abdera-client -->
             <dependency>
                 <groupId>org.apache.abdera</groupId>
                 <artifactId>abdera-client</artifactId>
@@ -149,7 +148,6 @@ under the License. <version>1.0.17</version>
             </plugin>
         </plugins>
     </build>
-
     <properties>
         <siddhi.version>4.5.5</siddhi.version>
         <siddhi.version.range>[4.0.0,5.0.0)</siddhi.version.range>

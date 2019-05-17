@@ -33,7 +33,8 @@ public class Constants {
 
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
-    public static final String CREDENTIALS = "wso2-admin";
+    public static final String DEFAULT_USERNAME = "wso2-admin";
+    public static final String DEFAULT_PASSWORD = "wso2-admin";
     public static final String ATOM_FUNC = "atom.func";
     public static final String FEED_UPDATE = "update";
     public static final String FEED_CREATE = "create";

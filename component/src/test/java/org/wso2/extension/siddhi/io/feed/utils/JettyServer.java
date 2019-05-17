@@ -59,12 +59,12 @@ public class JettyServer {
     private void setupAbdera(String base) throws Exception {
         customerProvider = new DefaultProvider(base);
 
-        NewsAdapter ca = new NewsAdapter();
-        ca.setHref("news");
+        NewsAdapter newsAdapter = new NewsAdapter();
+        newsAdapter.setHref("news");
 
         SimpleWorkspaceInfo wi = new SimpleWorkspaceInfo();
         wi.setTitle("Customer Workspace");
-        wi.addCollection(ca);
+        wi.addCollection(newsAdapter);
 
         customerProvider.addWorkspace(wi);
     }

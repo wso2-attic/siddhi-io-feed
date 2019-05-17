@@ -30,7 +30,6 @@ import java.util.Map;
  * Utility static methods for the entry operations
  */
 public class EntryUtils {
-
     // convert entry object to map object
     public static Map<String, String> entryToMap(Entry entry) {
         Map<String, String> map = new HashMap<>();
@@ -75,5 +74,4 @@ public class EntryUtils {
         entry.setUpdated(new Date());
         return entry;
     }
-
 }

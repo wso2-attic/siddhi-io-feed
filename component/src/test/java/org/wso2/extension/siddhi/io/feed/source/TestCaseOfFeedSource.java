@@ -189,7 +189,6 @@ public class TestCaseOfFeedSource {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@Source(type='feed', \n" +
                 "feed.type = 'Atom', \n" +
                 "request.interval = '-1', \n" +
@@ -204,7 +203,6 @@ public class TestCaseOfFeedSource {
                 EventPrinter.print(events);
             }
         });
-
     }
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
@@ -217,7 +215,6 @@ public class TestCaseOfFeedSource {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@Source(type='feed', \n" +
                 "feed.type = 'Atom', \n" +
                 "request.interval = 'A', \n" +
@@ -232,6 +229,5 @@ public class TestCaseOfFeedSource {
                 EventPrinter.print(events);
             }
         });
-
     }
 }

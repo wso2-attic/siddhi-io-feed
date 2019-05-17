@@ -33,7 +33,6 @@ import org.wso2.siddhi.query.api.exception.SiddhiAppValidationException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -120,7 +119,6 @@ public class FeedSource extends Source {
     public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
                      String[] requestedTransportPropertyNames, ConfigReader configReader,
                      SiddhiAppContext siddhiAppContext) {
-
         this.siddhiAppName = siddhiAppContext.getName();
         this.optionHolder = optionHolder;
         this.sourceEventListener = sourceEventListener;
@@ -138,8 +136,7 @@ public class FeedSource extends Source {
 
     private String validateType() {
         String type = optionHolder.validateAndGetStaticValue(Constants.FEED_TYPE);
-        type = type.toLowerCase(Locale.ENGLISH);
-        if (type.equals(Constants.RSS) || type.equals(Constants.ATOM)) {
+        if (type.equalsIgnoreCase(Constants.RSS) || type.equalsIgnoreCase(Constants.ATOM)) {
             return type;
         } else {
             throw new SiddhiAppValidationException("Feed Type Validation error in siddhi app " + siddhiAppName

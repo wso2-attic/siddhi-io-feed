@@ -39,9 +39,8 @@ import org.wso2.siddhi.core.stream.output.StreamCallback;
 import org.wso2.siddhi.core.util.EventPrinter;
 import org.wso2.siddhi.query.api.exception.SiddhiAppValidationException;
 
-
 public class TestCaseOfFeedSink {
-    private Logger log = Logger.getLogger(TestCaseOfFeedSource.class.getName());
+    private Logger log = Logger.getLogger(TestCaseOfFeedSource.class);
     private static JettyServer server;
     private static AbderaClient client = new AbderaClient();
     private static String base;
@@ -153,7 +152,6 @@ public class TestCaseOfFeedSink {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@sink(type='feed', \n" +
                 "url = '" + base + "', \n" +
                 "http.response.code = '204', \n" +
@@ -176,7 +174,6 @@ public class TestCaseOfFeedSink {
         Document<Feed> feedDoc = resp.getDocument();
         Feed feed = feedDoc.getRoot();
         Entry entry = feed.getEntries().get(0);
-
         String edit = entry.getEditLinkResolvedHref().toString();
         resp.release();
 
@@ -193,7 +190,7 @@ public class TestCaseOfFeedSink {
     }
 
     @Test(expectedExceptions = SiddhiAppValidationException.class)
-    public void sinkForValidation() throws InterruptedException {
+    public void sinkForValidation() {
 
         log.info("-------------------------------------------------------------------------------------");
         log.info("                           FEED sink for Url Malformed Exception Test                ");
@@ -202,7 +199,6 @@ public class TestCaseOfFeedSink {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@Sink(type='feed', \n" +
                 "feed.type = 'Atomm', \n" +
                 "url = 'localhost.', \n" +
@@ -228,7 +224,6 @@ public class TestCaseOfFeedSink {
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String siddhiApp = "@App:name('test') \n" +
-
                 "@sink(type='feed', \n" +
                 "url = '" + base + "', \n" +
                 "http.response.code = '204', \n" +
