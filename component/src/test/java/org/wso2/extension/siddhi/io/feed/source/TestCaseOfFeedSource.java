@@ -34,6 +34,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Test cases of FeedSource
+ */
 public class TestCaseOfFeedSource {
     private Logger log = Logger.getLogger(TestCaseOfFeedSource.class.getName());
     private AtomicBoolean eventArrived = new AtomicBoolean(false);

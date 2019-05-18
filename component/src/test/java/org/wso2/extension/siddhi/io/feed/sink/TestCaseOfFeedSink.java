@@ -39,6 +39,9 @@ import org.wso2.siddhi.core.stream.output.StreamCallback;
 import org.wso2.siddhi.core.util.EventPrinter;
 import org.wso2.siddhi.query.api.exception.SiddhiAppValidationException;
 
+/**
+ * Test cases of FeedSink
+ */
 public class TestCaseOfFeedSink {
     private Logger log = Logger.getLogger(TestCaseOfFeedSource.class);
     private static JettyServer server;

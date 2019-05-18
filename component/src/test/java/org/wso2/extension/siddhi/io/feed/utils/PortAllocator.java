@@ -21,7 +21,9 @@ package org.wso2.extension.siddhi.io.feed.utils;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-
+/**
+ * Port Allocator for JettyServer
+ */
 public class PortAllocator {
     public static int allocatePort() {
         try {

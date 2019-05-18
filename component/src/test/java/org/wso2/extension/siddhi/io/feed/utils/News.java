@@ -18,6 +18,9 @@
 
 package org.wso2.extension.siddhi.io.feed.utils;
 
+/**
+ * for hold news data
+ */
 public class News {
     private int id;
     private String name;
