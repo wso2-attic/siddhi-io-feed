@@ -1,0 +1,189 @@
+# API Docs - v1.0.0-SNAPSHOT
+
+## Sink
+
+### feed *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>*
+
+<p style="word-wrap: break-word"> The feed sink allows to publish atom feed entries to atom implemented http servers. The stream variables should be the standard element name of the entry of atom document. 'id', 'title', 'link', 'updated', 'author', 'published', 'summery' are the supported elements.</p>
+
+<span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
+```
+@sink(type="feed", url="<STRING>", atom.func="<STRING>", username="<STRING>", password="<INT>", http.response.code="<INT>", timeout="<INT>", @map(...)))
+```
+
+<span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
+<table>
+    <tr>
+        <th>Name</th>
+        <th style="min-width: 20em">Description</th>
+        <th>Default Value</th>
+        <th>Possible Data Types</th>
+        <th>Optional</th>
+        <th>Dynamic</th>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">url</td>
+        <td style="vertical-align: top; word-wrap: break-word">The feed end point url</td>
+        <td style="vertical-align: top"></td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">No</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">atom.func</td>
+        <td style="vertical-align: top; word-wrap: break-word">Atom function of the request. Acceptance parameters are 'create', 'delete', 'update'</td>
+        <td style="vertical-align: top"></td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">No</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">username</td>
+        <td style="vertical-align: top; word-wrap: break-word">User name of the basic authentication</td>
+        <td style="vertical-align: top">wso2-admin</td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">password</td>
+        <td style="vertical-align: top; word-wrap: break-word">Password of the basic authentication</td>
+        <td style="vertical-align: top">wso2-admin</td>
+        <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">http.response.code</td>
+        <td style="vertical-align: top; word-wrap: break-word">Http response code</td>
+        <td style="vertical-align: top">201</td>
+        <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">timeout</td>
+        <td style="vertical-align: top; word-wrap: break-word">time out of the atom http response, in milliseconds</td>
+        <td style="vertical-align: top">1000</td>
+        <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+</table>
+
+<span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
+<span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
+```
+@App:name('test')n@sink(type='feed',
+url = 'localhost:8080/news',
+http.response.code = '202',
+@map(type = 'keyvalue', fail.on.missing.attribute = 'false'))
+ define stream outputStream(content string, title string);
+```
+<p style="word-wrap: break-word"> This example shows how to create Atom entry on existing atom document. The variables of stream are the standard element of a atom entry </p>
+
+<span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span>
+```
+@App:name('test')n@sink(type='feed',
+url = 'localhost:8080/news',
+http.response.code = '204',
+atom.func = 'delete',
+@map(type = 'keyvalue'))
+ define stream outputStream(id string);
+```
+<p style="word-wrap: break-word"> This example shows how to delete Atom entry on existing atom document. The 'id' variable is a standard element of a atom entry </p>
+
+<span id="example-3" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 3</span>
+```
+@App:name('test')n@sink(type='feed',
+url = 'localhost:8080/news',
+http.response.code = '200',
+atom.func = 'update',
+@map(type = 'keyvalue'))
+ define stream outputStream(id string, content string, title string);
+```
+<p style="word-wrap: break-word"> This example shows how to update Atom entry on existing atom document. The variables of stream are the standard element of a atom entry </p>
+
+## Source
+
+### feed *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>*
+
+<p style="word-wrap: break-word"> The feed source allows user to make request and get feed entries from Rss(Atom and Rss) servers periodically. This source can consume both RSS and Atom type feed entries. Stream variables are standard element names of atom entry and rss item.'id', 'title', 'link', 'updated', 'author', 'published', 'summery' are the supported elements for Atom.'title', 'pubDate', 'guid', 'link' are the supported elements for RSS.</p>
+
+<span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
+```
+@source(type="feed", url="<STRING>", feed.type="<STRING>", request.interval="<INT>", @map(...)))
+```
+
+<span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
+<table>
+    <tr>
+        <th>Name</th>
+        <th style="min-width: 20em">Description</th>
+        <th>Default Value</th>
+        <th>Possible Data Types</th>
+        <th>Optional</th>
+        <th>Dynamic</th>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">url</td>
+        <td style="vertical-align: top; word-wrap: break-word">address of the feed end point</td>
+        <td style="vertical-align: top"></td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">No</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">feed.type</td>
+        <td style="vertical-align: top; word-wrap: break-word">Type of the feed. Acceptance parameters are Rss and Atom</td>
+        <td style="vertical-align: top"></td>
+        <td style="vertical-align: top">STRING</td>
+        <td style="vertical-align: top">No</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">request.interval</td>
+        <td style="vertical-align: top; word-wrap: break-word">request interval in minutes</td>
+        <td style="vertical-align: top">20</td>
+        <td style="vertical-align: top">INT</td>
+        <td style="vertical-align: top">Yes</td>
+        <td style="vertical-align: top">No</td>
+    </tr>
+</table>
+
+<span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
+<span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
+```
+@App:name('test')
+@source(type='feed',
+url = 'http://localhost:8080/news/rss.xml',
+@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),
+feed.type = 'rss')
+ define stream inputStream(title string, link string, updated string)
+```
+<p style="word-wrap: break-word"> This Query Shows how to request to the http server and consume Rss feed entries. Without optional values it requires url, . Those stream variables are (title, link, updated) the standard element of a RSS item </p>
+
+<span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span>
+```
+@App:name('test')
+@source(type='feed',
+url = 'http://localhost:8080/news/rss.xml',
+@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),
+request.interval = '15',
+feed.type = 'rss')
+ define stream inputStream(title string, link string, updated string)
+```
+<p style="word-wrap: break-word"> This Query Shows how to request to the http server and consume Rss feed entries. Those stream variables are (title, link, updated) the standard element of a RSS item </p>
+
+<span id="example-3" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 3</span>
+```
+@App:name('test')
+@source(type='feed',
+url = 'http://localhost:8080/news/rss.xml',
+@map(type = 'keyvalue', fail.on.missing.attribute = 'false'),
+request.interval = '15',
+feed.type = 'atom')
+ define stream inputStream(title string, id string, updated string)
+```
+<p style="word-wrap: break-word"> This Query Shows how to request to the http server and consume Atom feed entries. Those stream variables are (title, id, updated) the standard element of a atom entry</p>
+

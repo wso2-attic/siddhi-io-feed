@@ -1,4 +1,4 @@
-﻿siddhi-io-feed
+siddhi-io-feed
 ======================================
 
 The **siddhi-io-feed extension** is an extension to <a target="_blank" href="https://wso2.github.io/siddhi">Siddhi</a> that allows you to receive and publish atom entry events via http and 
@@ -23,6 +23,7 @@ Find some useful links below:
 **Using the extension as a <a target="_blank" href="https://wso2.github.io/siddhi/documentation/running-as-a-java-library">java library</a>**
 
 * This extension can be added as a maven dependency along with other Siddhi dependencies to your project.
+
 ```
      <dependency>
         <groupId>org.wso2.extension.siddhi.io.</groupId>
@@ -30,6 +31,7 @@ Find some useful links below:
         <version>x.x.x</version>
      </dependency>
 ```
+
  * Post your questions with the <a target="_blank" href="http://stackoverflow.com/search?q=siddhi">"Siddhi"</a> tag in <a target="_blank" href="http://stackoverflow.com/search?q=siddhi">Stackoverflow</a>.
 
  * Siddhi developers can be contacted via the mailing lists:
